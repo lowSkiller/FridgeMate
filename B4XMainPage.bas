@@ -50,33 +50,24 @@ Private Sub btnHamburger_Click
 End Sub
 
 'Create the View
-Public Sub CreatePicture (bmpImage As Map) As B4XView
+Public Sub CreatePicture (bmpImage As B4XBitmap, bmpWidth As Int, bmpHeight As Int) As B4XView
 	Dim p As B4XView = xui.CreatePanel("")
-	Dim iSumWidth As Int = 0
-	Dim bmpPartialWidth As Int = 0
-	For Each bmp As B4XBitmap In bmpImage
-		iSumWidth = iSumWidth + bmp.Width
-	Next
-	For Each bi As B4XImage In bmpImage
-'ToDo: Schleife für einzelbild, auszug Name aus Bitmap?
-'      Schleife doppelt? single über breite und höhe erzeugen.
-		bmpPartialWidth = bi.Width/iSumWidth
-		p.SetLayoutAnimated(0dip,0dip,0dip, 100%x*bmpPartialWidth, PageContent.sv.Height*GetDeviceLayoutValues.Scale)
-		p.LoadLayout("CVSingleImage")
-		p.Enabled = False
-		p.Tag = bi.
-	Next
+	p.SetLayoutAnimated(0dip,0dip,0dip, bmpWidth, PageContent.sv.Height*GetDeviceLayoutValues.Scale)
+	p.LoadLayout("CVSingleImage")
+	p.Enabled = False
+	p.Tag = ""
+	
 	'Log($"${strImage}"$)
-	ImageView1.Bitmap = bmp
-	ImageView1.Height = bmp.Height*p.Width/bmp.Width
-	ImageView1.Width = p.Width
+	ImageView1.Bitmap = bmpImage
+	ImageView1.Height = bmpHeight 'bmpImage.Height*p.Width/bmpImage.Width
+	ImageView1.Width = bmpWidth
 	Return p
 End Sub
 
 'Generate views and return list of views
 Public Sub CreatePictureSet (strPictureSetName As String, clvCustomView As CustomListView) As List
 	Dim listCPS As List 'Creatable pictures from set
-	Dim mapB4XImages As Map 'of B4XViews only
+	Dim mapB4XImages As List 'of B4XViews only
 	
 	listCPS.Initialize
 	'Search for lictures in files
@@ -97,13 +88,24 @@ Public Sub CreatePictureSet (strPictureSetName As String, clvCustomView As Custo
 	'Create views from generated List
 	mapB4XImages.Initialize
 	'Map pictures.from List
-	For i=1 To listCPS.Size
-		mapB4XImages.Put(i,xui.LoadBitmap(File.DirAssets, listCPS.Get(i) & ".png"))
+	Dim iSumWidth As Int = 0
+	Dim iMaxHeight As Int = 0
+	For i=0 To listCPS.Size-1
+		mapB4XImages.Add(xui.LoadBitmap(File.DirAssets, listCPS.Get(i) & ".png"))
+		iSumWidth = iSumWidth + mapB4XImages.Get(i).As(B4XBitmap).Width
 	Next
-	'Alle ausgeben und breite Berechnen
-	For i=1 To listCPS.Size
+	
+	Dim dWidthFactor As Double = 0.0
+	Dim dHeightFactor As Double = 0.0
+	dWidthFactor = (PageContent.sv.Width/iSumWidth).As(Double)
+	dHeightFactor = (PageContent.sv.Height/iMaxHeight).As(Double)
+	
+	For Each bmp As B4XBitmap In mapB4XImages
 	 'ToDo: CreatePicture verwenden, übergabe von höhe und breite umsetzen.
-		clvCustomView.Add(mapB4XImages.Get(i),"FridgePic" & i)
+		clvCustomView.Add(CreatePicture(bmp, _
+										bmp.Width*PageContent.sv.Width/iSumWidth, _
+										bmp.Height*PageContent.sv.Width/iSumWidth), _
+										"FridgePic" & i)
 	Next
 	Return listCPS
 End Sub
