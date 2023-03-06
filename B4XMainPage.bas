@@ -50,21 +50,21 @@ Private Sub btnHamburger_Click
 End Sub
 
 'Create the View
-Public Sub CreatePicture (bmpImage As List) As B4XView
+Public Sub CreatePicture (bmpImage As Map) As B4XView
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim iSumWidth As Int = 0
 	Dim bmpPartialWidth As Int = 0
 	For Each bmp As B4XBitmap In bmpImage
 		iSumWidth = iSumWidth + bmp.Width
 	Next
-	For i=1 To bmpImage.Size
+	For Each bi As B4XImage In bmpImage
 'ToDo: Schleife für einzelbild, auszug Name aus Bitmap?
-		Dim bmp As B4XBitmap = bmpImage.Get(i)
-		bmpPartialWidth = bmp.Width/iSumWidth
+'      Schleife doppelt? single über breite und höhe erzeugen.
+		bmpPartialWidth = bi.Width/iSumWidth
 		p.SetLayoutAnimated(0dip,0dip,0dip, 100%x*bmpPartialWidth, PageContent.sv.Height*GetDeviceLayoutValues.Scale)
 		p.LoadLayout("CVSingleImage")
 		p.Enabled = False
-		p.Tag = bmp
+		p.Tag = bi.
 	Next
 	'Log($"${strImage}"$)
 	ImageView1.Bitmap = bmp
@@ -75,32 +75,35 @@ End Sub
 
 'Generate views and return list of views
 Public Sub CreatePictureSet (strPictureSetName As String, clvCustomView As CustomListView) As List
-	Dim listCPS As List 'Creatable Pictures from Set
+	Dim listCPS As List 'Creatable pictures from set
 	Dim mapB4XImages As Map 'of B4XViews only
 	
 	listCPS.Initialize
-	'Search for Pictures in Files
+	'Search for lictures in files
 	For Each strFileName As Object In File.ListFiles(File.DirAssets)
 		Dim text As String = strFileName
+		'Log($"${strFileName}"$)
 		'Search only for .png
-		Log($"${strFileName}"$)
-'ToDo: find correct string comparsion
+
+
 		If text.SubString2(text.Length-4,text.Length).CompareTo(".png") = 0 Then
+		 'Search name
 			If text.SubString2(0,text.Length-5).CompareTo(strPictureSetName) = 0 Then
-				Log($"$     take it"$)
+				'Log($"$     take it"$)
 				listCPS.Add(text.SubString2(0,text.Length-4))
 			End If
 		End If
 	Next
 	'Create views from generated List
 	mapB4XImages.Initialize
-	'Alle Sammeln
+	'Map pictures.from List
 	For i=1 To listCPS.Size
 		mapB4XImages.Put(i,xui.LoadBitmap(File.DirAssets, listCPS.Get(i) & ".png"))
 	Next
 	'Alle ausgeben und breite Berechnen
 	For i=1 To listCPS.Size
-		clvCustomView.Add(mapB4XImages,"FridgePic" & i)
+	 'ToDo: CreatePicture verwenden, übergabe von höhe und breite umsetzen.
+		clvCustomView.Add(mapB4XImages.Get(i),"FridgePic" & i)
 	Next
 	Return listCPS
 End Sub
