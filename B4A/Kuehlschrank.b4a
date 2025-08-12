@@ -43,10 +43,9 @@ Group=Default Group
 Library1=b4xpages
 Library2=core
 Library3=dateutils
-Library4=stringutils
+Library4=keyvaluestore
 Library5=xui
 Library6=xui views
-Library7=keyvaluestore
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="31"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
 Module1=|relative|..\B4XMainPage
 Module2=|relative|..\B4XNewItemPage
@@ -58,9 +57,9 @@ Module7=ItemSetting
 Module8=|relative|..\NestedMap
 Module9=Starter
 NumberOfFiles=20
-NumberOfLibraries=7
+NumberOfLibraries=6
 NumberOfModules=9
-Version=12.2
+Version=13.4
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Fridge Mate
