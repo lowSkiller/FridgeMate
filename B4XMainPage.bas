@@ -50,26 +50,17 @@ Private Sub btnHamburger_Click
 End Sub
 
 'Create the View
-Public Sub CreatePicture (bmpImage As Map) As B4XView
+Public Sub CreatePicture (bmpImage As B4XBitmap, bmpWidth As Int, bmpHeight As Int, strTag As String) As B4XView
 	Dim p As B4XView = xui.CreatePanel("")
-	Dim iSumWidth As Int = 0
-	Dim bmpPartialWidth As Int = 0
-	For Each bmp As B4XBitmap In bmpImage
-		iSumWidth = iSumWidth + bmp.Width
-	Next
-	For Each bi As B4XImage In bmpImage
-'ToDo: Schleife für einzelbild, auszug Name aus Bitmap?
-'      Schleife doppelt? single über breite und höhe erzeugen.
-		bmpPartialWidth = bi.Width/iSumWidth
-		p.SetLayoutAnimated(0dip,0dip,0dip, 100%x*bmpPartialWidth, PageContent.sv.Height*GetDeviceLayoutValues.Scale)
-		p.LoadLayout("CVSingleImage")
-		p.Enabled = False
-		p.Tag = bi.
-	Next
+	p.SetLayoutAnimated(0dip,0dip,0dip, bmpWidth, PageContent.sv.Height*GetDeviceLayoutValues.Scale)
+	p.LoadLayout("CVSingleImage")
+	p.Enabled = False
+	p.Tag = strTag
+		
 	'Log($"${strImage}"$)
-	ImageView1.Bitmap = bmp
-	ImageView1.Height = bmp.Height*p.Width/bmp.Width
-	ImageView1.Width = p.Width
+	ImageView1.Bitmap = bmpImage
+	ImageView1.Height = bmpHeight
+	ImageView1.Width = bmpWidth
 	Return p
 End Sub
 
@@ -96,14 +87,34 @@ Public Sub CreatePictureSet (strPictureSetName As String, clvCustomView As Custo
 	Next
 	'Create views from generated List
 	mapB4XImages.Initialize
-	'Map pictures.from List
+	'Scan pictures and sum views
+	Dim iSumWidth As Int = 0
+	Dim iMaxHeight As Int = 0
 	For i=1 To listCPS.Size
 		mapB4XImages.Put(i,xui.LoadBitmap(File.DirAssets, listCPS.Get(i) & ".png"))
+		iSumWidth = iSumWidth + mapB4XImages.Get(i).As(B4XBitmap).Width
+		iMaxHeight = Max(mapB4XImages.Get(i).As(B4XBitmap).Height, iMaxHeight)
 	Next
-	'Alle ausgeben und breite Berechnen
-	For i=1 To listCPS.Size
-	 'ToDo: CreatePicture verwenden, übergabe von höhe und breite umsetzen.
-		clvCustomView.Add(mapB4XImages.Get(i),"FridgePic" & i)
+	
+	'Calculate resize on height
+	Dim dWidthFactor As Double = 0.0
+	Dim dHeightBmp As Double = 0.0
+	Dim dHeightFactor As Double = 0.0
+	Dim dWidthBmp As Double = 0.0
+	dWidthFactor = (PageContent.sv.Width / iSumWidth).As(Double)
+	dHeightFactor = (PageContent.sv.Height / iMaxHeight).As(Double)
+         
+	'Scan pics and build view
+	Dim strLabel As String
+	For Each strFileName As Object In File.ListFiles(File.DirAssets)
+		strLabel = "fPic" & strPictureSetName.CharAt(1).ToUpperCase & strPictureSetName.Substring(2) & i
+		dWidthBmp = mapB4XImages.Get(i).As(B4XBitmap).Width * dWidthFactor
+		dHeightBmp = mapB4XImages.Get(i).As(B4XBitmap).Height * dWidthFactor
+		If dHeightBmp > PageContent.sv.Height Then
+			dHeightBmp = PageContent.sv.Height
+			dWidthBmp = mapB4XImages.Get(i).As(B4XBitmap).Width * dHeightFactor
+		End If
+			clvCustomView.Add(mapB4XImages.Get(i),"FridgePic" & i)
 	Next
 	Return listCPS
 End Sub
