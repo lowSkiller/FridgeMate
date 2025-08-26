@@ -28,6 +28,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=1
-NavigationStack=B4XNewItemPage,CreateOptListItem,65,0,B4XMainPage,Class_Globals,16,6,B4XMainPage,Initialize,17,0,B4XMainPage,btnHamburger_Click,44,0,B4XMainPage,CreatePicture,48,6,B4XNewItemPage,Class_Globals,23,0,Visueller Designer,CVSingleImage.bal,-100,6,B4XMainPage,CreatePictureSet,97,6,B4XMainPage,B4XPage_Created,32,6,Visueller Designer,MainPage.bal,-100,6,Visueller Designer,NewItemPage.bal,-100,1
+NavigationStack=NestedMap,PutNode,24,0,NestedMap,Class_Globals,7,0,NestedMap,Initialize,15,0,fmItem,GetValues,42,0,Visueller Designer,MainPage.bal,-100,6,B4XNewItemPage,Class_Globals,10,0,Visueller Designer,CVInputImage.bal,-100,2,Visueller Designer,CVSingleImage.bal,-100,4,B4XMainPage,CreatePicture,48,0,B4XMainPage,CreatePictureSet,83,6
 SelectedBuild=0
 VisibleModules=1
